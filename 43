@@ -1,0 +1,47 @@
+-- GUI Anti-AFK dengan Tombol On/Off
+local ScreenGui = Instance.new("ScreenGui")
+local MainButton = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+-- Setup GUI
+ScreenGui.Name = "AntiAFK_Gui"
+ScreenGui.Parent = game:GetService("CoreGui")
+
+MainButton.Name = "ToggleButton"
+MainButton.Parent = ScreenGui
+MainButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Merah (Off)
+MainButton.Position = UDim2.new(0.05, 0, 0.4, 0)
+MainButton.Size = UDim2.new(0, 120, 0, 40)
+MainButton.Font = Enum.Font.SourceSansBold
+MainButton.Text = "Anti-AFK: OFF"
+MainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MainButton.TextSize = 16
+MainButton.Draggable = true -- Biar bisa digeser-geser
+
+UICorner.Parent = MainButton
+
+local _G = {AntiAFK = false}
+local VirtualUser = game:GetService("VirtualUser")
+
+-- Fungsi Anti-AFK
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    if _G.AntiAFK then
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+        print("Anti-AFK: Bergerak agar tidak terputus!")
+    end
+end)
+
+-- Logika Tombol
+MainButton.MouseButton1Click:Connect(function()
+    _G.AntiAFK = not _G.AntiAFK
+    if _G.AntiAFK then
+        MainButton.Text = "Anti-AFK: ON"
+        MainButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- Hijau (On)
+        print("Anti-AFK Aktif")
+    else
+        MainButton.Text = "Anti-AFK: OFF"
+        MainButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Merah (Off)
+        print("Anti-AFK Mati")
+    end
+end)
